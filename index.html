@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>Rigveda International School</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- ── SPINNER ─────────────────────────────────────────────── -->
+  <div class="spinner-overlay" id="spinnerOverlay">
+    <div class="spinner-box">
+      <div class="spinner"></div>
+      <p id="spinnerMsg">Loading…</p>
+    </div>
+  </div>
+
+  <!-- ── TOAST CONTAINER ─────────────────────────────────────── -->
+  <div id="toast-container"></div>
+
+  <!-- ══════════════════════════════════════════════════════════
+     SCREEN 1 — LOGIN
+══════════════════════════════════════════════════════════ -->
+  <div id="screen-login">
+    <div class="login-bg">
+      <div class="orb orb1"></div>
+      <div class="orb orb2"></div>
+      <div class="orb orb3"></div>
+      <div class="grid-overlay"></div>
+    </div>
+    <div class="login-wrap">
+      <div class="login-card">
+        <div class="brand">
+          <div class="brand-icon">🏫</div>
+          <h1>Rigveda International School</h1>
+          <p>Student Management System</p>
+        </div>
+        <div class="alert-error" id="loginError">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <span id="loginErrorText"></span>
+        </div>
+        <form id="loginForm" novalidate>
+          <div class="fgroup">
+            <label>Username</label>
+            <div class="iw">
+              <i class="bi bi-person iicon"></i>
+              <input type="text" id="loginUsername" placeholder="Enter username" autocomplete="username" />
+            </div>
+          </div>
+          <div class="fgroup">
+            <label>Password</label>
+            <div class="iw">
+              <i class="bi bi-lock iicon"></i>
+              <input type="password" id="loginPassword" placeholder="Enter password" autocomplete="current-password" />
+              <button type="button" class="itoggle" onclick="togglePw('loginPassword','loginPwEye')">
+                <i class="bi bi-eye" id="loginPwEye"></i>
+              </button>
+            </div>
+          </div>
+          <button type="submit" class="btn-login" id="loginBtn">
+            <i class="bi bi-box-arrow-in-right"></i> Sign In
+          </button>
+        </form>
+        <p class="login-footer">© 2026–27 Rigveda International School</p>
+      </div>
+    </div>
+  </div><!-- /screen-login -->
+
+
+  <!-- ══════════════════════════════════════════════════════════
+     SCREEN 2 — DASHBOARD
+══════════════════════════════════════════════════════════ -->
+  <div id="screen-dashboard">
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sb-brand">
+        <div class="sb-logo">🏫</div>
+        <div class="sb-brand-txt">
+          <h2>School Manager</h2>
+          <p>Administration Portal</p>
+        </div>
+        <button class="sb-close-btn" onclick="closeSidebar()"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <nav class="sb-nav" id="sidebarNav"></nav>
+      <div class="sb-footer">
+        <div class="user-chip">
+          <div class="u-avatar" id="userAvatar">A</div>
+          <div class="u-info">
+            <div class="u-name" id="userName">—</div>
+            <div class="u-role" id="userRoleBadge">—</div>
+          </div>
+        </div>
+        <button class="btn-logout" onclick="logout()">
+          <i class="bi bi-box-arrow-left"></i> Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+      <div class="topbar">
+        <button class="topbar-ham" onclick="openSidebar()"><i class="bi bi-list"></i></button>
+        <div class="topbar-title" id="topbarTitle">Dashboard</div>
+        <div class="topbar-right">
+          <span class="topbar-role" id="topbarRole"></span>
+        </div>
+      </div>
+
+      <div class="page-wrap">
+
+        <!-- ── HOME / DASHBOARD ───────────────────────────────── -->
+        <div class="page active" id="page-home">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-ico ci-blue"><i class="bi bi-people-fill"></i></div>
+              <div>
+                <div class="stat-val" id="stat-students">—</div>
+                <div class="stat-lbl">Total Students</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-ico ci-purple"><i class="bi bi-grid-3x3-gap-fill"></i></div>
+              <div>
+                <div class="stat-val" id="stat-classes">—</div>
+                <div class="stat-lbl">Classes</div>
+              </div>
+            </div>
+            <div class="stat-card" id="stat-users-card">
+              <div class="stat-ico ci-cyan"><i class="bi bi-person-badge-fill"></i></div>
+              <div>
+                <div class="stat-val" id="stat-users">—</div>
+                <div class="stat-lbl">Users</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-ico ci-green"><i class="bi bi-calendar-check-fill"></i></div>
+              <div>
+                <div class="stat-val" id="stat-today">—</div>
+                <div class="stat-lbl">Today's Admissions</div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hdr">
+              <div class="card-title">
+                <div class="cico ci-blue"><i class="bi bi-clock-history"></i></div>Recent Admissions
+              </div>
+              <button class="btn btn-ghost btn-sm" onclick="navTo('page-students')">View All <i
+                  class="bi bi-arrow-right"></i></button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Class</th>
+                    <th>Section</th>
+                    <th>Date</th>
+                    <th>Phone</th>
+                  </tr>
+                </thead>
+                <tbody id="recentTbody">
+                  <tr>
+                    <td colspan="6">
+                      <div class="empty-state"><i class="bi bi-database-slash"></i>
+                        <p>No data yet</p>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── STUDENTS ───────────────────────────────────────── -->
+        <div class="page" id="page-students">
+          <div class="card">
+            <div class="card-hdr">
+              <div class="card-title">
+                <div class="cico ci-blue"><i class="bi bi-people-fill"></i></div>Student Records
+              </div>
+              <div class="hdr-actions">
+                <button class="btn btn-excel btn-sm" onclick="openExportModal()"><i
+                    class="bi bi-file-earmark-arrow-down-fill"></i><span class="btn-txt"> Export</span></button>
+                <button class="btn btn-primary btn-sm" onclick="openStudentForm(null)"><i
+                    class="bi bi-person-plus-fill"></i><span class="btn-txt"> Add</span></button>
+              </div>
+            </div>
+            <div class="toolbar">
+              <div class="search-wrap">
+                <i class="bi bi-search"></i>
+                <input type="text" id="studentSearch" placeholder="Search name, admission no, phone…"
+                  oninput="filterStudents()" />
+              </div>
+              <select class="fsel" id="classFilter" onchange="filterStudents()">
+                <option value="">All Classes</option>
+              </select>
+              <select class="fsel" id="sectionFilter" onchange="filterStudents()">
+                <option value="">All Sections</option>
+              </select>
+              <span class="rec-count" id="studentCount">0 records</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Student ID</th>
+                    <th>Adm. No</th>
+                    <th>Name</th>
+                    <th>Class</th>
+                    <th>Section</th>
+                    <th>Phone</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="studentTbody">
+                  <tr>
+                    <td colspan="8">
+                      <div class="empty-state"><i class="bi bi-people"></i>
+                        <p>No students found</p>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Mobile-only card list -->
+            <div id="studentCards" class="student-card-list"></div>
+          </div>
+        </div>
+    
+        <!-- ── CLASSES (Admin) ────────────────────────────────── -->
+        <div class="page" id="page-classes">
+          <div class="two-col-grid">
+            <!-- Add Class -->
+            <div class="card">
+              <div class="card-hdr">
+                <div class="card-title">
+                  <div class="cico ci-purple"><i class="bi bi-plus-circle-fill"></i></div>Add Class &amp; Section
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="fgroup"><label>Class Name</label><input type="text" id="newClass"
+                    placeholder="e.g. NUR, LKG, 1, 10, 12…" /></div>
+                <div class="fgroup"><label>Section Name</label><input type="text" id="newSection"
+                    placeholder="e.g. Green, Blue, A, B…" /></div>
+                <button class="btn btn-primary w100" onclick="addClass()"><i class="bi bi-plus-lg"></i> Add
+                  Class</button>
+              </div>
+            </div>
+            <!-- Existing classes -->
+            <div class="card">
+              <div class="card-hdr">
+                <div class="card-title">
+                  <div class="cico ci-purple"><i class="bi bi-grid-3x3-gap-fill"></i></div>Existing Classes
+                </div>
+                <button class="btn btn-ghost btn-sm" onclick="loadClasses()"><i
+                    class="bi bi-arrow-clockwise"></i></button>
+              </div>
+              <div class="classes-grid" id="classesGrid">
+                <div class="empty-state" style="grid-column:1/-1"><i class="bi bi-grid"></i>
+                  <p>No classes yet</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Custom Field Manager (Admin only) -->
+          <div class="card" id="fieldMgrCard" style="margin-top:20px">
+            <div class="card-hdr">
+              <div class="card-title">
+                <div class="cico ci-amber"><i class="bi bi-sliders"></i></div>Custom Student Fields
+              </div>
+              <button class="btn btn-primary btn-sm" onclick="openFieldForm(null)"><i class="bi bi-plus-lg"></i><span
+                  class="btn-txt"> Add Field</span></button>
+            </div>
+            <div class="card-body">
+              <p class="hint-text">Add extra fields to the student form. These fields appear instantly when adding
+                students — teachers can also create fields on the fly inside the Add Student form.</p>
+              <div id="fieldDefsList" class="field-defs-list">
+                <div class="empty-state"><i class="bi bi-sliders"></i>
+                  <p>No custom fields yet</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── USERS (Admin) ──────────────────────────────────── -->
+        <div class="page" id="page-users">
+          <div class="card">
+            <div class="card-hdr">
+              <div class="card-title">
+                <div class="cico ci-cyan"><i class="bi bi-people-fill"></i></div>System Users
+              </div>
+              <button class="btn btn-primary btn-sm" onclick="openUserForm(null)"><i
+                  class="bi bi-person-plus-fill"></i><span class="btn-txt"> Add User</span></button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Assigned Class</th>
+                    <th>Section</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="usersTbody">
+                  <tr>
+                    <td colspan="6">
+                      <div class="empty-state"><i class="bi bi-person-x"></i>
+                        <p>No users found</p>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── MY PROFILE ─────────────────────────────────────── -->
+        <div class="page" id="page-profile">
+          <!-- Rendered dynamically by renderProfilePage() -->
+        </div>
+
+      </div><!-- /page-wrap -->
+    </div><!-- /main -->
+  </div><!-- /screen-dashboard -->
+
+
+  <!-- ══════════════════════════════════════════════════════════
+     MODAL: STUDENT FORM
+══════════════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="studentFormModal">
+    <div class="modal modal-xl">
+      <div class="modal-hdr">
+        <div class="modal-title">
+          <div class="cico ci-blue"><i class="bi bi-person-lines-fill"></i></div><span id="sfTitle">Add New
+            Student</span>
+        </div>
+        <button class="modal-close" onclick="closeModal('studentFormModal')"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="modal-body" id="studentFormBody">
+        <!-- Dynamically rendered by JS -->
+      </div>
+      <div class="modal-ftr">
+        <button class="btn btn-ghost" onclick="closeModal('studentFormModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="submitStudentForm()" id="sfSubmitBtn"><i class="bi bi-send-fill"></i>
+          Submit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+     MODAL: STUDENT VIEW
+══════════════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="studentViewModal">
+    <div class="modal">
+      <div class="modal-hdr">
+        <div class="modal-title">
+          <div class="cico ci-cyan"><i class="bi bi-person-badge-fill"></i></div>Student Profile
+        </div>
+        <button class="modal-close" onclick="closeModal('studentViewModal')"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="modal-body" id="studentViewBody"></div>
+      <div class="modal-ftr"><button class="btn btn-ghost" onclick="closeModal('studentViewModal')">Close</button></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+     MODAL: USER FORM
+══════════════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="userFormModal">
+    <div class="modal modal-md">
+      <div class="modal-hdr">
+        <div class="modal-title">
+          <div class="cico ci-cyan"><i class="bi bi-person-gear"></i></div><span id="ufTitle">Add User</span>
+        </div>
+        <button class="modal-close" onclick="closeModal('userFormModal')"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="card-body">
+          <input type="hidden" id="uf_rowIndex" />
+          <!-- Previous password display row (edit mode only) -->
+          <div id="prevPwRow" class="prev-pw-display" style="display:none;margin-bottom:14px">
+            <i class="bi bi-shield-lock-fill"></i>
+            <span>Current password (masked):</span>
+            <span class="prev-pw-dots" id="prevPwMasked">••••••</span>
+          </div>
+          <div class="form-grid2">
+            <div class="fgroup">
+              <label>Username</label>
+              <input type="text" id="uf_username" placeholder="e.g. teacher.sharma" autocomplete="off" />
+            </div>
+            <div class="fgroup">
+              <label>Password</label>
+              <div class="pw-wrap">
+                <input type="password" id="uf_password" placeholder="Enter password" autocomplete="new-password" />
+                <button type="button" class="itoggle" onclick="togglePw('uf_password','ufPwEye')"><i class="bi bi-eye"
+                    id="ufPwEye"></i></button>
+              </div>
+            </div>
+          </div>
+          <div class="fgroup">
+            <label>Role</label>
+            <select id="uf_role" onchange="toggleInchargeFields()">
+              <option value="">— Select Role —</option>
+              <option value="Admin">Admin</option>
+              <option value="ClassIncharge">ClassIncharge</option>
+            </select>
+          </div>
+          <div id="inchargeFields" class="hidden">
+            <div class="form-grid2">
+              <div class="fgroup">
+                <label>Assigned Class</label>
+                <select id="uf_class" onchange="populateSectionDrop('uf_section',this.value)">
+                  <option value="">— Select Class —</option>
+                </select>
+              </div>
+              <div class="fgroup">
+                <label>Assigned Section</label>
+                <select id="uf_section">
+                  <option value="">— Select Section —</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-ftr">
+        <button class="btn btn-ghost" onclick="closeModal('userFormModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="submitUserForm()" id="ufSubmitBtn"><i
+            class="bi bi-person-check-fill"></i> Save User</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+     MODAL: FIELD FORM
+══════════════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="fieldFormModal">
+    <div class="modal modal-sm">
+      <div class="modal-hdr">
+        <div class="modal-title">
+          <div class="cico ci-amber"><i class="bi bi-sliders"></i></div><span id="ffTitle">Add Field</span>
+        </div>
+        <button class="modal-close" onclick="closeModal('fieldFormModal')"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="card-body">
+          <input type="hidden" id="ff_rowIndex" />
+          <input type="hidden" id="ff_order" />
+          <div class="fgroup"><label>Field Name</label><input type="text" id="ff_name"
+              placeholder="e.g. Religion, Bus Route, Caste…" /></div>
+          <div class="fgroup">
+            <label>Field Type</label>
+            <select id="ff_type" onchange="toggleOptionsRow()">
+              <option value="text">Text</option>
+              <option value="number">Number</option>
+              <option value="date">Date</option>
+              <option value="email">Email</option>
+              <option value="phone">Phone</option>
+              <option value="textarea">Long Text (Textarea)</option>
+              <option value="dropdown">Dropdown (select)</option>
+              <option value="checkbox">Checkbox (yes/no)</option>
+            </select>
+          </div>
+          <div class="fgroup hidden" id="optionsRow">
+            <label>Dropdown Options <span class="muted-tag">(comma separated)</span></label>
+            <input type="text" id="ff_options" placeholder="e.g. Hindu,Muslim,Christian,Sikh" />
+          </div>
+          <div class="fgroup">
+            <label class="checkbox-label">
+              <input type="checkbox" id="ff_required" /> <span>Required field</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-ftr">
+        <button class="btn btn-ghost" onclick="closeModal('fieldFormModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="submitFieldForm()" id="ffSubmitBtn"><i class="bi bi-check-lg"></i> Save
+          Field</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+     MODAL: EXPORT COLUMN SELECTOR
+══════════════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="exportModal">
+    <div class="modal modal-md">
+      <div class="modal-hdr">
+        <div class="modal-title">
+          <div class="cico ci-green"><i class="bi bi-file-earmark-arrow-down-fill"></i></div>Export Students
+        </div>
+        <button class="modal-close" onclick="closeModal('exportModal')"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="modal-body" id="exportSelectorBody" style="padding:18px 20px;">
+        <!-- Rendered by openExportModal() -->
+      </div>
+      <div class="modal-ftr">
+        <button class="btn btn-ghost" onclick="closeModal('exportModal')">Cancel</button>
+        <button class="btn btn-excel" onclick="doExport()"><i class="bi bi-download"></i> Download</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+     MODAL: CONFIRM DELETE
+══════════════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="confirmModal">
+    <div class="modal modal-xs">
+      <div class="confirm-icon"><i class="bi bi-trash3-fill"></i></div>
+      <div class="confirm-title" id="confirmTitle">Delete?</div>
+      <p class="confirm-txt" id="confirmText">This cannot be undone.</p>
+      <div class="confirm-btns">
+        <button class="btn btn-ghost" onclick="closeModal('confirmModal')">Cancel</button>
+        <button class="btn btn-danger" id="confirmOkBtn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="Script.js"></script>
+</body>
+
+</html>
