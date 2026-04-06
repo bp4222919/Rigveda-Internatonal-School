@@ -281,7 +281,11 @@ function renderStudentTable(students) {
       <td>${esc(s.class)}</td>
       <td>${esc(s.section)}</td>
       <td>${esc(s.phone1)}</td>
-      <td>...</td>
+      <td>
+      <button class="btn btn-info btn-sm" onclick="viewStudent(${s.rowIndex})"><i class="bi bi-eye-fill"></i></button>
+        <button class="btn btn-warn btn-sm" onclick="openStudentForm(${s.rowIndex})"><i class="bi bi-pencil-fill"></i></button>
+        <button class="btn btn-danger btn-sm" onclick="delRecord('student',${s.rowIndex},'${esc(s.name)}')"><i class="bi bi-trash3-fill"></i></button>
+      </td>
     </tr>
   `).join('');
 }
