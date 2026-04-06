@@ -2124,6 +2124,10 @@ tbody td {
     display: none;
   } */
 
+#studentTableHeading{
+    display: none;
+} 
+
    #studentTbody{
     display: none;
   }
