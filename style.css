@@ -2120,7 +2120,11 @@ tbody td {
   }
 
   /* Table → hide on mobile, show cards */
-  .table-wrap table {
+  /* .table-wrap table {
+    display: none;
+  } */
+
+   #studentTbody{
     display: none;
   }
 
